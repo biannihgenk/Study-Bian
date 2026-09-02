@@ -1,0 +1,440 @@
+// BIAN OS — Prisma Schema
+// SQLite database for personal learning & development OS
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// USER & PROFILE
+// ==========================================
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String   // bcrypt hashed
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  profile             Profile?
+  goals               Goal[]
+  learningSubjects    LearningSubject[]
+  learningSessions    LearningSession[]
+  tasks               Task[]
+  scheduleEvents      ScheduleEvent[]
+  competitions        Competition[]
+  projects            Project[]
+  userAchievements    UserAchievement[]
+  stats               UserStats?
+  streak              UserStreak?
+  notifications       Notification[]
+  todayFocus          TodayFocus?
+}
+
+model Profile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  bio       String   @default("")
+  avatar    String   @default("")
+  title     String   @default("")
+  quote     String   @default("")
+  skills    String   @default("[]") // JSON array
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// GOALS & MILESTONES
+// ==========================================
+
+model Goal {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String    @default("")
+  category    String    @default("General")
+  priority    String    @default("Medium") // Low, Medium, High, Urgent
+  targetDate  DateTime?
+  status      String    @default("Active") // Active, Completed, Paused, Archived
+  progress    Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  milestones GoalMilestone[]
+  tasks      Task[]
+  sessions   LearningSession[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model GoalMilestone {
+  id          Int       @id @default(autoincrement())
+  goalId      Int
+  title       String
+  order       Int       @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  goal Goal @relation(fields: [goalId], references: [id], onDelete: Cascade)
+
+  @@index([goalId])
+}
+
+// ==========================================
+// LEARNING
+// ==========================================
+
+model LearningSubject {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String   @default("")
+  icon        String   @default("📚")
+  color       String   @default("#6366f1")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topics   LearningTopic[]
+  sessions LearningSession[]
+
+  @@index([userId])
+}
+
+model LearningTopic {
+  id          Int       @id @default(autoincrement())
+  subjectId   Int
+  title       String
+  description String    @default("")
+  order       Int       @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  subject   LearningSubject    @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  resources LearningResource[]
+
+  @@index([subjectId])
+}
+
+model LearningResource {
+  id            Int      @id @default(autoincrement())
+  topicId       Int
+  title         String
+  description   String   @default("")
+  url           String   @default("")
+  image         String   @default("")
+  estimatedTime Int      @default(0) // in minutes
+  status        String   @default("Not Started") // Not Started, In Progress, Completed
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  topic LearningTopic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@index([topicId])
+}
+
+model LearningSession {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  subjectId   Int?
+  activity    String
+  duration    Int      // in minutes
+  date        DateTime @default(now())
+  description String   @default("")
+  taskId      Int?
+  goalId      Int?
+  createdAt   DateTime @default(now())
+
+  user    User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject LearningSubject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  task    Task?            @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  goal    Goal?            @relation(fields: [goalId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([subjectId])
+  @@index([date])
+}
+
+// ==========================================
+// TASKS
+// ==========================================
+
+model Task {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  title         String
+  description   String    @default("")
+  priority      String    @default("Medium") // Low, Medium, High, Urgent
+  deadline      DateTime?
+  category      String    @default("Personal") // Learning, School, Competition, Project, Personal, Other
+  estimatedTime Int       @default(0) // in minutes
+  status        String    @default("Todo") // Todo, In Progress, Completed
+  completedAt   DateTime?
+  goalId        Int?
+  competitionId Int?
+  projectId     Int?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user        User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  goal        Goal?             @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  competition Competition?      @relation(fields: [competitionId], references: [id], onDelete: SetNull)
+  project     Project?          @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  sessions    LearningSession[]
+  scheduleEvents ScheduleEvent[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([priority])
+  @@index([deadline])
+  @@index([goalId])
+  @@index([competitionId])
+  @@index([projectId])
+}
+
+// ==========================================
+// SCHEDULE / CALENDAR
+// ==========================================
+
+model ScheduleEvent {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  title       String
+  description String    @default("")
+  startTime   DateTime
+  endTime     DateTime
+  date        DateTime
+  category    String    @default("Personal") // Learning, School, Competition, Project, Personal, Other
+  color       String    @default("#6366f1")
+  completed   Boolean   @default(false)
+  taskId      Int?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  task Task? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([date])
+}
+
+// ==========================================
+// COMPETITIONS
+// ==========================================
+
+model Competition {
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  name        String
+  description String    @default("")
+  category    String    @default("General")
+  startDate   DateTime?
+  deadline    DateTime?
+  status      String    @default("Planning") // Planning, Ongoing, Completed, Cancelled
+  priority    String    @default("Medium")
+  image       String    @default("")
+  progress    Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user      User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks     CompetitionTask[]
+  learnings CompetitionLearning[]
+  relatedTasks Task[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([deadline])
+}
+
+model CompetitionTask {
+  id            Int       @id @default(autoincrement())
+  competitionId Int
+  title         String
+  order         Int       @default(0)
+  completed     Boolean   @default(false)
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@index([competitionId])
+}
+
+model CompetitionLearning {
+  id            Int      @id @default(autoincrement())
+  competitionId Int
+  content       String
+  createdAt     DateTime @default(now())
+
+  competition Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+
+  @@index([competitionId])
+}
+
+// ==========================================
+// PROJECTS
+// ==========================================
+
+model Project {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  name          String
+  description   String    @default("")
+  category      String    @default("General")
+  status        String    @default("Idea") // Idea, Planning, In Development, Completed, Paused, Archived
+  startDate     DateTime?
+  endDate       DateTime?
+  image         String    @default("")
+  links         String    @default("[]") // JSON array
+  skillsLearned String    @default("[]") // JSON array
+  progress      Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  projectTasks ProjectTask[]
+  images       ProjectImage[]
+  relatedTasks Task[]
+
+  @@index([userId])
+  @@index([status])
+}
+
+model ProjectTask {
+  id          Int       @id @default(autoincrement())
+  projectId   Int
+  title       String
+  order       Int       @default(0)
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+model ProjectImage {
+  id        Int      @id @default(autoincrement())
+  projectId Int
+  path      String
+  caption   String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([projectId])
+}
+
+// ==========================================
+// GAMIFICATION
+// ==========================================
+
+model Achievement {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  title       String
+  description String
+  icon        String   @default("🏆")
+  xpReward    Int      @default(0)
+  condition   String   @default("") // JSON describing unlock condition
+  createdAt   DateTime @default(now())
+
+  userAchievements UserAchievement[]
+}
+
+model UserAchievement {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  achievementId Int
+  unlockedAt    DateTime @default(now())
+
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+}
+
+model UserStats {
+  id                    Int @id @default(autoincrement())
+  userId                Int @unique
+  totalXp               Int @default(0)
+  level                 Int @default(1)
+  totalLearningMinutes  Int @default(0)
+  tasksCompleted        Int @default(0)
+  goalsCompleted        Int @default(0)
+  projectsCompleted     Int @default(0)
+  competitionsCompleted Int @default(0)
+  focusSessions         Int @default(0)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserStreak {
+  id             Int       @id @default(autoincrement())
+  userId         Int       @unique
+  currentStreak  Int       @default(0)
+  longestStreak  Int       @default(0)
+  lastActiveDate DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// ==========================================
+// NOTIFICATIONS
+// ==========================================
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  title       String
+  message     String
+  type        String   @default("Info") // Info, Warning, Success, Achievement, Deadline, Streak
+  read        Boolean  @default(false)
+  relatedId   Int?
+  relatedType String?  // Task, Goal, Competition, Project, Achievement
+  createdAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([read])
+}
+
+// ==========================================
+// TODAY'S FOCUS
+// ==========================================
+
+model TodayFocus {
+  id               Int      @id @default(autoincrement())
+  userId           Int      @unique
+  title            String
+  description      String   @default("")
+  relatedId        Int?
+  relatedType      String?  // Task, Goal, Competition, Project
+  estimatedMinutes Int      @default(60)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
