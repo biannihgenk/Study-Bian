@@ -38,7 +38,7 @@ export default function CompetitionsClient({ initialCompetitions }: { initialCom
   const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 300, damping: 24 } } };
 
   return (
-    <div className="max-w-7xl mx-auto pb-10">
+    <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pb-20">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
           <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3 flex items-center gap-3">

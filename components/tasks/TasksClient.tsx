@@ -105,7 +105,7 @@ export default function TasksClient({ initialTasks, goals, competitions, project
   };
 
   return (
-    <div className="max-w-[1000px] mx-auto pb-10">
+    <div className="w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pb-20">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
