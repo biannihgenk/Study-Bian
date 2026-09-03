@@ -1,0 +1,374 @@
+-- Failed query:
+-- -- Failed query:
+-- -- -- SQL Dump untuk Database Bian OS
+-- -- -- Copy semua kode di bawah ini dan paste ke SQL Editor di Neon.tech
+-- -- 
+-- -- CREATE TABLE "User" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "email" TEXT NOT NULL,
+-- --     "name" TEXT NOT NULL,
+-- --     "password" TEXT NOT NULL,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+-- -- 
+-- -- CREATE TABLE "Profile" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "bio" TEXT NOT NULL DEFAULT '',
+-- --     "avatar" TEXT NOT NULL DEFAULT '',
+-- --     "title" TEXT NOT NULL DEFAULT '',
+-- --     "quote" TEXT NOT NULL DEFAULT '',
+-- --     "skills" TEXT NOT NULL DEFAULT '[]',
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+-- -- ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "Goal" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "category" TEXT NOT NULL DEFAULT 'General',
+-- --     "priority" TEXT NOT NULL DEFAULT 'Medium',
+-- --     "targetDate" TIMESTAMP(3),
+-- --     "status" TEXT NOT NULL DEFAULT 'Active',
+-- --     "progress" INTEGER NOT NULL DEFAULT 0,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "Goal_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "Goal_userId_idx" ON "Goal"("userId");
+-- -- CREATE INDEX "Goal_status_idx" ON "Goal"("status");
+-- -- ALTER TABLE "Goal" ADD CONSTRAINT "Goal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "GoalMilestone" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "goalId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "order" INTEGER NOT NULL DEFAULT 0,
+-- --     "completed" BOOLEAN NOT NULL DEFAULT false,
+-- --     "completedAt" TIMESTAMP(3),
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "GoalMilestone_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "GoalMilestone_goalId_idx" ON "GoalMilestone"("goalId");
+-- -- ALTER TABLE "GoalMilestone" ADD CONSTRAINT "GoalMilestone_goalId_fkey" FOREIGN KEY ("goalId") REFERENCES "Goal"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "LearningSubject" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "icon" TEXT NOT NULL DEFAULT '📚',
+-- --     "color" TEXT NOT NULL DEFAULT '#6366f1',
+-- --     "order" INTEGER NOT NULL DEFAULT 0,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "LearningSubject_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "LearningSubject_userId_idx" ON "LearningSubject"("userId");
+-- -- ALTER TABLE "LearningSubject" ADD CONSTRAINT "LearningSubject_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "LearningTopic" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "subjectId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "order" INTEGER NOT NULL DEFAULT 0,
+-- --     "completed" BOOLEAN NOT NULL DEFAULT false,
+-- --     "completedAt" TIMESTAMP(3),
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "LearningTopic_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "LearningTopic_subjectId_idx" ON "LearningTopic"("subjectId");
+-- -- ALTER TABLE "LearningTopic" ADD CONSTRAINT "LearningTopic_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "LearningSubject"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "LearningResource" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "topicId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "url" TEXT NOT NULL DEFAULT '',
+-- --     "image" TEXT NOT NULL DEFAULT '',
+-- --     "estimatedTime" INTEGER NOT NULL DEFAULT 0,
+-- --     "status" TEXT NOT NULL DEFAULT 'Not Started',
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "LearningResource_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "LearningResource_topicId_idx" ON "LearningResource"("topicId");
+-- -- ALTER TABLE "LearningResource" ADD CONSTRAINT "LearningResource_topicId_fkey" FOREIGN KEY ("topicId") REFERENCES "LearningTopic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "Competition" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "name" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "category" TEXT NOT NULL DEFAULT 'General',
+-- --     "startDate" TIMESTAMP(3),
+-- --     "deadline" TIMESTAMP(3),
+-- --     "status" TEXT NOT NULL DEFAULT 'Planning',
+-- --     "priority" TEXT NOT NULL DEFAULT 'Medium',
+-- --     "image" TEXT NOT NULL DEFAULT '',
+-- --     "progress" INTEGER NOT NULL DEFAULT 0,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "Competition_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "Competition_userId_idx" ON "Competition"("userId");
+-- -- CREATE INDEX "Competition_status_idx" ON "Competition"("status");
+-- -- CREATE INDEX "Competition_deadline_idx" ON "Competition"("deadline");
+-- -- ALTER TABLE "Competition" ADD CONSTRAINT "Competition_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "Project" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "name" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "category" TEXT NOT NULL DEFAULT 'General',
+-- --     "status" TEXT NOT NULL DEFAULT 'Idea',
+-- --     "startDate" TIMESTAMP(3),
+-- --     "endDate" TIMESTAMP(3),
+-- --     "image" TEXT NOT NULL DEFAULT '',
+-- --     "links" TEXT NOT NULL DEFAULT '[]',
+-- --     "skillsLearned" TEXT NOT NULL DEFAULT '[]',
+-- --     "progress" INTEGER NOT NULL DEFAULT 0,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "Project_userId_idx" ON "Project"("userId");
+-- -- CREATE INDEX "Project_status_idx" ON "Project"("status");
+-- -- ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "Task" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "priority" TEXT NOT NULL DEFAULT 'Medium',
+-- --     "deadline" TIMESTAMP(3),
+-- --     "category" TEXT NOT NULL DEFAULT 'Personal',
+-- --     "estimatedTime" INTEGER NOT NULL DEFAULT 0,
+-- --     "status" TEXT NOT NULL DEFAULT 'Todo',
+-- --     "completedAt" TIMESTAMP(3),
+-- --     "goalId" INTEGER,
+-- --     "competitionId" INTEGER,
+-- --     "projectId" INTEGER,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "Task_userId_idx" ON "Task"("userId");
+-- -- CREATE INDEX "Task_status_idx" ON "Task"("status");
+-- -- CREATE INDEX "Task_priority_idx" ON "Task"("priority");
+-- -- CREATE INDEX "Task_deadline_idx" ON "Task"("deadline");
+-- -- CREATE INDEX "Task_goalId_idx" ON "Task"("goalId");
+-- -- CREATE INDEX "Task_competitionId_idx" ON "Task"("competitionId");
+-- -- CREATE INDEX "Task_projectId_idx" ON "Task"("projectId");
+-- -- ALTER TABLE "Task" ADD CONSTRAINT "Task_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- ALTER TABLE "Task" ADD CONSTRAINT "Task_goalId_fkey" FOREIGN KEY ("goalId") REFERENCES "Goal"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- ALTER TABLE "Task" ADD CONSTRAINT "Task_competitionId_fkey" FOREIGN KEY ("competitionId") REFERENCES "Competition"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- ALTER TABLE "Task" ADD CONSTRAINT "Task_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "LearningSession" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "subjectId" INTEGER,
+-- --     "activity" TEXT NOT NULL,
+-- --     "duration" INTEGER NOT NULL,
+-- --     "date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "taskId" INTEGER,
+-- --     "goalId" INTEGER,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     CONSTRAINT "LearningSession_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "LearningSession_userId_idx" ON "LearningSession"("userId");
+-- -- CREATE INDEX "LearningSession_subjectId_idx" ON "LearningSession"("subjectId");
+-- -- CREATE INDEX "LearningSession_date_idx" ON "LearningSession"("date");
+-- -- ALTER TABLE "LearningSession" ADD CONSTRAINT "LearningSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- -- ALTER TABLE "LearningSession" ADD CONSTRAINT "LearningSession_subjectId_fkey" FOREIGN KEY ("subjectId") REFERENCES "LearningSubject"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- ALTER TABLE "LearningSession" ADD CONSTRAINT "LearningSession_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- ALTER TABLE "LearningSession" ADD CONSTRAINT "LearningSession_goalId_fkey" FOREIGN KEY ("goalId") REFERENCES "Goal"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- -- 
+-- -- CREATE TABLE "ScheduleEvent" (
+-- --     "id" SERIAL NOT NULL,
+-- --     "userId" INTEGER NOT NULL,
+-- --     "title" TEXT NOT NULL,
+-- --     "description" TEXT NOT NULL DEFAULT '',
+-- --     "startTime" TIMESTAMP(3) NOT NULL,
+-- --     "endTime" TIMESTAMP(3) NOT NULL,
+-- --     "date" TIMESTAMP(3) NOT NULL,
+-- --     "category" TEXT NOT NULL DEFAULT 'Personal',
+-- --     "color" TEXT NOT NULL DEFAULT '#6366f1',
+-- --     "completed" BOOLEAN NOT NULL DEFAULT false,
+-- --     "taskId" INTEGER,
+-- --     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+-- --     "updatedAt" TIMESTAMP(3) NOT NULL,
+-- --     CONSTRAINT "ScheduleEvent_pkey" PRIMARY KEY ("id")
+-- -- );
+-- -- CREATE INDEX "ScheduleEvent_userId_idx" ON "ScheduleEvent"("userId");
+-- -- CREATE INDEX "ScheduleEvent_date_idx" ON "ScheduleEvent"("date");
+-- -- ALTER TABLE "ScheduleEvent" ADD CONSTRAINT "ScheduleEvent_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- ALTER TABLE "ScheduleEvent" ADD CONSTRAINT "ScheduleEvent_taskId_fkey" FOREIGN KEY ("taskId") REFERENCES "Task"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "CompetitionTask" (
+--     "id" SERIAL NOT NULL,
+--     "competitionId" INTEGER NOT NULL,
+--     "title" TEXT NOT NULL,
+--     "order" INTEGER NOT NULL DEFAULT 0,
+--     "completed" BOOLEAN NOT NULL DEFAULT false,
+--     "completedAt" TIMESTAMP(3),
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     "updatedAt" TIMESTAMP(3) NOT NULL,
+--     CONSTRAINT "CompetitionTask_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "CompetitionTask_competitionId_idx" ON "CompetitionTask"("competitionId");
+-- ALTER TABLE "CompetitionTask" ADD CONSTRAINT "CompetitionTask_competitionId_fkey" FOREIGN KEY ("competitionId") REFERENCES "Competition"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "CompetitionLearning" (
+--     "id" SERIAL NOT NULL,
+--     "competitionId" INTEGER NOT NULL,
+--     "content" TEXT NOT NULL,
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT "CompetitionLearning_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "CompetitionLearning_competitionId_idx" ON "CompetitionLearning"("competitionId");
+-- ALTER TABLE "CompetitionLearning" ADD CONSTRAINT "CompetitionLearning_competitionId_fkey" FOREIGN KEY ("competitionId") REFERENCES "Competition"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "ProjectTask" (
+--     "id" SERIAL NOT NULL,
+--     "projectId" INTEGER NOT NULL,
+--     "title" TEXT NOT NULL,
+--     "order" INTEGER NOT NULL DEFAULT 0,
+--     "completed" BOOLEAN NOT NULL DEFAULT false,
+--     "completedAt" TIMESTAMP(3),
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     "updatedAt" TIMESTAMP(3) NOT NULL,
+--     CONSTRAINT "ProjectTask_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "ProjectTask_projectId_idx" ON "ProjectTask"("projectId");
+-- ALTER TABLE "ProjectTask" ADD CONSTRAINT "ProjectTask_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "ProjectImage" (
+--     "id" SERIAL NOT NULL,
+--     "projectId" INTEGER NOT NULL,
+--     "path" TEXT NOT NULL,
+--     "caption" TEXT NOT NULL DEFAULT '',
+--     "order" INTEGER NOT NULL DEFAULT 0,
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT "ProjectImage_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "ProjectImage_projectId_idx" ON "ProjectImage"("projectId");
+-- ALTER TABLE "ProjectImage" ADD CONSTRAINT "ProjectImage_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "Achievement" (
+--     "id" SERIAL NOT NULL,
+--     "key" TEXT NOT NULL,
+--     "title" TEXT NOT NULL,
+--     "description" TEXT NOT NULL,
+--     "icon" TEXT NOT NULL DEFAULT '🏆',
+--     "xpReward" INTEGER NOT NULL DEFAULT 0,
+--     "condition" TEXT NOT NULL DEFAULT '',
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT "Achievement_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE UNIQUE INDEX "Achievement_key_key" ON "Achievement"("key");
+-- 
+-- CREATE TABLE "UserAchievement" (
+--     "id" SERIAL NOT NULL,
+--     "userId" INTEGER NOT NULL,
+--     "achievementId" INTEGER NOT NULL,
+--     "unlockedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT "UserAchievement_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "UserAchievement_userId_idx" ON "UserAchievement"("userId");
+-- CREATE UNIQUE INDEX "UserAchievement_userId_achievementId_key" ON "UserAchievement"("userId", "achievementId");
+-- ALTER TABLE "UserAchievement" ADD CONSTRAINT "UserAchievement_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- ALTER TABLE "UserAchievement" ADD CONSTRAINT "UserAchievement_achievementId_fkey" FOREIGN KEY ("achievementId") REFERENCES "Achievement"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "UserStats" (
+--     "id" SERIAL NOT NULL,
+--     "userId" INTEGER NOT NULL,
+--     "totalXp" INTEGER NOT NULL DEFAULT 0,
+--     "level" INTEGER NOT NULL DEFAULT 1,
+--     "totalLearningMinutes" INTEGER NOT NULL DEFAULT 0,
+--     "tasksCompleted" INTEGER NOT NULL DEFAULT 0,
+--     "goalsCompleted" INTEGER NOT NULL DEFAULT 0,
+--     "projectsCompleted" INTEGER NOT NULL DEFAULT 0,
+--     "competitionsCompleted" INTEGER NOT NULL DEFAULT 0,
+--     "focusSessions" INTEGER NOT NULL DEFAULT 0,
+--     CONSTRAINT "UserStats_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE UNIQUE INDEX "UserStats_userId_key" ON "UserStats"("userId");
+-- ALTER TABLE "UserStats" ADD CONSTRAINT "UserStats_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "UserStreak" (
+--     "id" SERIAL NOT NULL,
+--     "userId" INTEGER NOT NULL,
+--     "currentStreak" INTEGER NOT NULL DEFAULT 0,
+--     "longestStreak" INTEGER NOT NULL DEFAULT 0,
+--     "lastActiveDate" TIMESTAMP(3),
+--     CONSTRAINT "UserStreak_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE UNIQUE INDEX "UserStreak_userId_key" ON "UserStreak"("userId");
+-- ALTER TABLE "UserStreak" ADD CONSTRAINT "UserStreak_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "Notification" (
+--     "id" SERIAL NOT NULL,
+--     "userId" INTEGER NOT NULL,
+--     "title" TEXT NOT NULL,
+--     "message" TEXT NOT NULL,
+--     "type" TEXT NOT NULL DEFAULT 'Info',
+--     "read" BOOLEAN NOT NULL DEFAULT false,
+--     "relatedId" INTEGER,
+--     "relatedType" TEXT,
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     CONSTRAINT "Notification_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE INDEX "Notification_userId_idx" ON "Notification"("userId");
+-- CREATE INDEX "Notification_read_idx" ON "Notification"("read");
+-- ALTER TABLE "Notification" ADD CONSTRAINT "Notification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+-- 
+-- CREATE TABLE "TodayFocus" (
+--     "id" SERIAL NOT NULL,
+--     "userId" INTEGER NOT NULL,
+--     "title" TEXT NOT NULL,
+--     "description" TEXT NOT NULL DEFAULT '',
+--     "relatedId" INTEGER,
+--     "relatedType" TEXT,
+--     "estimatedMinutes" INTEGER NOT NULL DEFAULT 60,
+--     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+--     "updatedAt" TIMESTAMP(3) NOT NULL,
+--     CONSTRAINT "TodayFocus_pkey" PRIMARY KEY ("id")
+-- );
+-- CREATE UNIQUE INDEX "TodayFocus_userId_key" ON "TodayFocus"("userId");
+-- ALTER TABLE "TodayFocus" ADD CONSTRAINT "TodayFocus_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE "GalleryImage" (
+    "id" SERIAL NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "path" TEXT NOT NULL,
+    "caption" TEXT NOT NULL DEFAULT '',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "GalleryImage_pkey" PRIMARY KEY ("id")
+);
+CREATE INDEX "GalleryImage_userId_idx" ON "GalleryImage"("userId");
+ALTER TABLE "GalleryImage" ADD CONSTRAINT "GalleryImage_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+Try generating sample data and querying it by running the example statements below, or click
+New Query to clear the editor.
+*/
+CREATE TABLE IF NOT EXISTS playing_with_neon(id SERIAL PRIMARY KEY, name TEXT NOT NULL, value REAL);
+INSERT INTO playing_with_neon(name, value)
+  SELECT LEFT(md5(i::TEXT), 10), random() FROM generate_series(1, 10) s(i);
+SELECT * FROM playing_with_neon;
