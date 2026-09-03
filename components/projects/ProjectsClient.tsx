@@ -38,17 +38,23 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
     <div className="max-w-7xl mx-auto pb-10">
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-extrabold tracking-tight mb-2 flex items-center gap-3">
-            <div className="p-2 bg-blue-500/10 rounded-xl"><FolderKanban size={24} className="text-blue-500" /></div>
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-3 flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-violet-500/10 flex items-center justify-center">
+              <FolderKanban size={24} className="text-violet-400" />
+            </div>
             Projects
           </h1>
-          <div className="flex gap-3 text-sm font-medium">
-            <span className="text-muted-foreground bg-muted/50 px-2.5 py-1 rounded-md"><strong className="text-foreground">{activeCount}</strong> active</span>
-            <span className="text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md"><strong className="font-bold">{completedCount}</strong> completed</span>
+          <div className="flex gap-2 sm:gap-3 text-xs sm:text-sm font-medium">
+            <span className="text-gray-400 bg-white/5 border border-white/[0.06] px-3 py-1.5 rounded-lg">
+              <strong className="text-white">{activeCount}</strong> active
+            </span>
+            <span className="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-lg">
+              <strong className="font-bold">{completedCount}</strong> completed
+            </span>
           </div>
         </div>
         <button 
-          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-primary text-primary-foreground font-bold text-sm rounded-xl hover:bg-primary/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 active:scale-95 shrink-0" 
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-violet-500 hover:bg-violet-600 text-white font-bold text-sm rounded-xl shadow-[0_4px_20px_rgba(139,92,246,0.3)] transition-all hover:-translate-y-0.5 active:scale-95 shrink-0" 
           onClick={() => setShowModal(true)}
         >
           <Plus size={16} /> New Project
@@ -61,37 +67,39 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
             {projects.map(proj => {
               const isExpanded = expandedProject === proj.id;
               return (
-                <motion.div key={proj.id} layout variants={itemVariants} className={`bg-card border rounded-[24px] overflow-hidden shadow-sm hover:shadow-md transition-all ${isExpanded ? 'border-primary/50 ring-4 ring-primary/5 lg:col-span-2 xl:col-span-3' : 'border-border/60 hover:border-primary/30'}`}>
-                  <div className="p-6 cursor-pointer" onClick={() => setExpandedProject(isExpanded ? null : proj.id)}>
+                <motion.div key={proj.id} layout variants={itemVariants} className={`bg-white/5 backdrop-blur-sm border rounded-3xl overflow-hidden transition-all duration-300 ${isExpanded ? 'border-violet-500/50 ring-2 ring-violet-500/20 lg:col-span-2 xl:col-span-3' : 'border-white/10 hover:border-white/20 hover:bg-white/[0.07]'}`}>
+                  <div className="p-6 sm:p-8 cursor-pointer" onClick={() => setExpandedProject(isExpanded ? null : proj.id)}>
                     <div className="flex items-start justify-between gap-4 mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center border border-blue-500/10">
-                          <Rocket size={24} className="text-blue-500 drop-shadow-sm" />
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center border border-violet-500/10 shrink-0">
+                          <Rocket size={26} className="text-violet-400" />
                         </div>
                         <div>
-                          <h3 className="text-xl font-bold group-hover:text-primary transition-colors">{proj.name}</h3>
-                          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{proj.category}</span>
+                          <h3 className="text-xl font-bold text-white group-hover:text-violet-400 transition-colors">{proj.name}</h3>
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400 bg-white/[0.06] px-2 py-0.5 rounded-md inline-block mt-1">{proj.category}</span>
                         </div>
                       </div>
-                      <span className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border ${proj.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' : proj.status === 'In Development' ? 'bg-primary/10 text-primary border-primary/20' : 'bg-muted text-muted-foreground border-border/50'}`}>
+                      <span className={`px-2.5 py-1 rounded-lg text-xs font-bold uppercase tracking-wide border ${proj.status === 'Completed' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : proj.status === 'In Development' ? 'bg-violet-500/10 text-violet-400 border-violet-500/20' : 'bg-white/5 text-gray-400 border-white/[0.06]'}`}>
                         {proj.status}
                       </span>
                     </div>
 
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-6 h-10">
+                    <p className="text-sm text-gray-400 line-clamp-2 mb-6 h-10 leading-relaxed">
                       {proj.description || 'No description provided.'}
                     </p>
 
-                    <div className="space-y-2">
+                    <div className="space-y-2.5">
                       <div className="flex justify-between text-sm font-medium">
-                        <span className="flex items-center gap-1.5 text-muted-foreground"><LayoutDashboard size={14} /> Progress</span>
-                        <span className="font-bold text-foreground">{proj.progress}%</span>
+                        <span className="flex items-center gap-1.5 text-gray-400"><LayoutDashboard size={14} /> Progress</span>
+                        <span className="font-bold text-white">{proj.progress}%</span>
                       </div>
-                      <div className="h-2.5 w-full bg-muted/50 rounded-full overflow-hidden shadow-inner">
-                        <motion.div initial={{ width: 0 }} animate={{ width: `${proj.progress}%` }} transition={{ duration: 1 }} className="h-full bg-blue-500 rounded-full" />
+                      <div className="h-2 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${proj.progress}%` }} transition={{ duration: 1 }} className="h-full bg-gradient-to-r from-violet-500 to-fuchsia-500 rounded-full relative overflow-hidden">
+                          <div className="absolute inset-0 bg-[linear-gradient(45deg,rgba(255,255,255,0.15)_25%,transparent_25%,transparent_50%,rgba(255,255,255,0.15)_50%,rgba(255,255,255,0.15)_75%,transparent_75%,transparent)] bg-[length:1rem_1rem] animate-[shimmer_1s_linear_infinite]" />
+                        </motion.div>
                       </div>
-                      <div className="flex justify-between text-xs text-muted-foreground pt-1">
-                        <span className="flex items-center gap-1"><Clock size={12} /> {proj.endDate ? new Date(proj.endDate).toLocaleDateString() : 'No deadline'}</span>
+                      <div className="flex justify-between text-xs text-gray-500 pt-1 font-medium">
+                        <span className="flex items-center gap-1.5"><Clock size={12} className="text-gray-400" /> {proj.endDate ? new Date(proj.endDate).toLocaleDateString() : 'No deadline'}</span>
                         <span>{proj.projectTasks.filter(t => t.completed).length}/{proj.projectTasks.length} Tasks</span>
                       </div>
                     </div>
@@ -99,58 +107,58 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
 
                   <AnimatePresence>
                     {isExpanded && (
-                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-border/50 bg-muted/5">
-                        <div className="p-6">
+                      <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="border-t border-white/[0.06] bg-white/[0.02]">
+                        <div className="p-6 sm:p-8">
                           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             <div>
-                              <h4 className="text-xs font-bold uppercase tracking-widest text-foreground mb-4">Project Overview</h4>
-                              <p className="text-sm text-muted-foreground leading-relaxed bg-background p-4 rounded-xl border border-border/40 shadow-sm mb-4">
+                              <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center gap-2"><FolderKanban size={14}/> Project Overview</h4>
+                              <p className="text-sm text-gray-300 leading-relaxed bg-white/[0.03] p-5 rounded-2xl border border-white/[0.06] mb-5">
                                 {proj.description || 'No detailed description.'}
                               </p>
                               
                               <div className="flex gap-4">
-                                <div className="flex-1 bg-background border border-border/40 rounded-xl p-3 shadow-sm">
-                                  <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">Start Date</div>
-                                  <div className="text-sm font-medium">{proj.startDate ? new Date(proj.startDate).toLocaleDateString() : 'Not set'}</div>
+                                <div className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
+                                  <div className="text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-wider">Start Date</div>
+                                  <div className="text-sm font-semibold text-white">{proj.startDate ? new Date(proj.startDate).toLocaleDateString() : 'Not set'}</div>
                                 </div>
-                                <div className="flex-1 bg-background border border-border/40 rounded-xl p-3 shadow-sm">
-                                  <div className="text-[10px] uppercase font-bold text-muted-foreground mb-1">End Date</div>
-                                  <div className="text-sm font-medium">{proj.endDate ? new Date(proj.endDate).toLocaleDateString() : 'Not set'}</div>
+                                <div className="flex-1 bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4">
+                                  <div className="text-[10px] uppercase font-bold text-gray-500 mb-1.5 tracking-wider">End Date</div>
+                                  <div className="text-sm font-semibold text-white">{proj.endDate ? new Date(proj.endDate).toLocaleDateString() : 'Not set'}</div>
                                 </div>
                               </div>
                             </div>
 
                             <div>
-                              <h4 className="text-xs font-bold uppercase tracking-widest text-foreground mb-4 flex items-center justify-between">
-                                Tasks Board
-                                <span className="px-2 py-0.5 bg-primary/10 text-primary rounded-md text-[10px]">{proj.projectTasks.length} Total</span>
+                              <h4 className="text-xs font-bold uppercase tracking-widest text-gray-400 mb-4 flex items-center justify-between">
+                                <span className="flex items-center gap-2"><LayoutDashboard size={14}/> Tasks Board</span>
+                                <span className="px-2.5 py-0.5 bg-violet-500/10 text-violet-400 rounded-md text-[10px] border border-violet-500/20">{proj.projectTasks.length} Total</span>
                               </h4>
                               
-                              <div className="bg-background border border-border/40 rounded-xl shadow-sm overflow-hidden flex flex-col h-[300px]">
-                                <div className="p-3 border-b border-border/40 flex gap-2">
-                                  <input className="flex-1 px-3 py-1.5 bg-muted/50 border border-transparent focus:border-primary/50 focus:bg-background rounded-lg text-sm transition-all outline-none" placeholder="Add new task..." value={newTask} onChange={e => setNewTask(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddTask(proj.id)} />
-                                  <button className="px-3 py-1.5 bg-primary text-primary-foreground font-medium rounded-lg text-sm shadow-sm hover:bg-primary/90 transition-colors" onClick={() => handleAddTask(proj.id)}>Add</button>
+                              <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl overflow-hidden flex flex-col h-[320px]">
+                                <div className="p-3.5 border-b border-white/[0.06] flex gap-2.5 bg-white/[0.02]">
+                                  <input className="flex-1 px-3.5 py-2 bg-white/[0.04] border border-white/[0.06] hover:border-white/10 focus:border-violet-500/50 rounded-xl text-sm text-white transition-all outline-none placeholder-gray-500" placeholder="Add new task..." value={newTask} onChange={e => setNewTask(e.target.value)} onKeyDown={e => e.key === 'Enter' && handleAddTask(proj.id)} />
+                                  <button className="px-4 py-2 bg-violet-500 text-white font-bold rounded-xl text-sm hover:bg-violet-600 transition-colors" onClick={() => handleAddTask(proj.id)}>Add</button>
                                 </div>
                                 
                                 <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
                                   {proj.projectTasks.length > 0 ? (
-                                    <div className="flex flex-col gap-1">
+                                    <div className="flex flex-col gap-1.5">
                                       {proj.projectTasks.map(t => (
-                                        <div key={t.id} className="flex items-center gap-3 p-2 hover:bg-muted rounded-lg transition-colors group/task">
-                                          <button onClick={() => handleToggleTask(t.id)} className={`shrink-0 transition-colors ${t.completed ? 'text-emerald-500' : 'text-muted-foreground hover:text-emerald-500'}`}>
+                                        <div key={t.id} className="flex items-center gap-3 p-2.5 hover:bg-white/[0.05] rounded-xl transition-colors group/task border border-transparent hover:border-white/[0.06]">
+                                          <button onClick={() => handleToggleTask(t.id)} className={`shrink-0 transition-colors ${t.completed ? 'text-emerald-400' : 'text-gray-500 hover:text-emerald-400'}`}>
                                             {t.completed ? <CheckCircle2 size={18} /> : <Circle size={18} />}
                                           </button>
-                                          <span className={`text-sm flex-1 transition-all ${t.completed ? 'line-through text-muted-foreground' : 'text-foreground font-medium'}`}>{t.title}</span>
-                                          <button className="p-1.5 text-muted-foreground hover:text-rose-500 hover:bg-rose-500/10 rounded-md opacity-0 group-hover/task:opacity-100 transition-all" onClick={() => handleDeleteTask(t.id)}>
+                                          <span className={`text-sm flex-1 transition-all ${t.completed ? 'line-through text-gray-500' : 'text-gray-200 font-medium'}`}>{t.title}</span>
+                                          <button className="p-1.5 text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg opacity-0 group-hover/task:opacity-100 transition-all" onClick={() => handleDeleteTask(t.id)}>
                                             <Trash2 size={14} />
                                           </button>
                                         </div>
                                       ))}
                                     </div>
                                   ) : (
-                                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground p-4 text-center">
-                                      <LayoutDashboard size={24} className="mb-2 opacity-20" />
-                                      <span className="text-sm">No tasks mapped out yet.</span>
+                                    <div className="h-full flex flex-col items-center justify-center text-gray-500 p-4 text-center">
+                                      <LayoutDashboard size={28} className="mb-3 opacity-30" />
+                                      <span className="text-sm font-medium">No tasks mapped out yet.</span>
                                     </div>
                                   )}
                                 </div>
@@ -158,11 +166,11 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
                             </div>
                           </div>
 
-                          <div className="flex justify-end gap-3 pt-6 mt-6 border-t border-border/40">
-                            <button className="px-5 py-2.5 text-sm font-bold text-muted-foreground hover:text-foreground hover:bg-muted rounded-xl transition-colors flex items-center gap-2" onClick={() => setEditingProject(proj)}>
+                          <div className="flex justify-end gap-3 pt-6 mt-8 border-t border-white/[0.06]">
+                            <button className="px-5 py-2.5 text-sm font-bold text-gray-400 hover:text-white hover:bg-white/5 rounded-xl transition-colors flex items-center gap-2 border border-transparent hover:border-white/[0.06]" onClick={() => setEditingProject(proj)}>
                               <Edit3 size={16} /> Edit Settings
                             </button>
-                            <button className="px-5 py-2.5 text-sm font-bold text-rose-500 hover:bg-rose-500/10 rounded-xl transition-colors flex items-center gap-2" onClick={() => handleDelete(proj.id)}>
+                            <button className="px-5 py-2.5 text-sm font-bold text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors flex items-center gap-2 border border-transparent hover:border-rose-500/20" onClick={() => handleDelete(proj.id)}>
                               <Trash2 size={16} /> Delete Project
                             </button>
                           </div>
@@ -176,13 +184,13 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
           </AnimatePresence>
         </motion.div>
       ) : (
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-24 px-4 text-center bg-card border border-border/60 rounded-[28px] shadow-sm">
-          <div className="w-24 h-24 rounded-3xl bg-muted/50 flex items-center justify-center mb-6 shadow-inner">
-            <Rocket size={40} className="text-blue-500/70" />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col items-center justify-center py-24 px-4 text-center bg-white/5 border border-white/10 rounded-3xl backdrop-blur-sm">
+          <div className="w-20 h-20 rounded-3xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center mb-6">
+            <Rocket size={32} className="text-violet-500/60" />
           </div>
-          <h2 className="text-2xl font-bold mb-3">Launch a new project</h2>
-          <p className="text-muted-foreground max-w-md mb-8">Group tasks, track progress, and build something amazing step by step.</p>
-          <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-primary-foreground font-bold rounded-xl hover:bg-primary/90 shadow-sm hover:shadow-md transition-all hover:-translate-y-0.5 active:scale-95" onClick={() => setShowModal(true)}>
+          <h2 className="text-2xl font-bold text-white mb-3">Launch a new project</h2>
+          <p className="text-gray-400 max-w-md mb-8">Group tasks, track progress, and build something amazing step by step.</p>
+          <button className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-violet-500 hover:bg-violet-600 text-white font-bold rounded-xl shadow-[0_4px_20px_rgba(139,92,246,0.3)] transition-all hover:-translate-y-0.5 active:scale-95" onClick={() => setShowModal(true)}>
             <Plus size={18} /> Create Project
           </button>
         </motion.div>
@@ -192,56 +200,56 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
       <AnimatePresence>
         {(showModal || editingProject) && (
           <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50" onClick={() => { setShowModal(false); setEditingProject(null); }} />
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50" onClick={() => { setShowModal(false); setEditingProject(null); }} />
             <div className="fixed inset-0 flex items-center justify-center z-50 p-4 pointer-events-none">
-              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="bg-card border border-border/60 rounded-[28px] shadow-2xl w-full max-w-[500px] overflow-hidden pointer-events-auto flex flex-col max-h-[90vh]">
-                <div className="flex items-center justify-between px-6 py-5 border-b border-border/50 bg-muted/10">
-                  <h2 className="text-lg font-extrabold flex items-center gap-2">
-                    <div className="p-1.5 bg-blue-500/10 rounded-lg"><Rocket size={18} className="text-blue-500" /></div>
+              <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} className="bg-[#0f0f11] border border-white/10 rounded-[28px] shadow-2xl w-full max-w-[500px] overflow-hidden pointer-events-auto flex flex-col max-h-[90vh]">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06] bg-white/[0.02]">
+                  <h2 className="text-lg font-bold text-white flex items-center gap-3">
+                    <div className="p-2 bg-violet-500/10 rounded-xl"><Rocket size={18} className="text-violet-400" /></div>
                     {editingProject ? 'Edit Project' : 'New Project'}
                   </h2>
-                  <button className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-full transition-colors" onClick={() => { setShowModal(false); setEditingProject(null); }}><X size={18} /></button>
+                  <button className="p-2 text-gray-500 hover:text-white hover:bg-white/5 rounded-full transition-colors" onClick={() => { setShowModal(false); setEditingProject(null); }}><X size={18} /></button>
                 </div>
                 
                 <form action={editingProject ? handleUpdate : handleCreate} className="flex flex-col overflow-hidden">
                   <div className="p-6 overflow-y-auto flex flex-col gap-5 custom-scrollbar">
                     <div>
-                      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Project Name *</label>
-                      <input name="name" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none" required defaultValue={editingProject?.name || ''} placeholder="What are you building?" autoFocus />
+                      <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Project Name *</label>
+                      <input name="name" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none" required defaultValue={editingProject?.name || ''} placeholder="What are you building?" autoFocus />
                     </div>
                     <div>
-                      <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Description</label>
-                      <textarea name="description" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none resize-y min-h-[80px]" defaultValue={editingProject?.description || ''} placeholder="Brief summary of this project..." />
+                      <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Description</label>
+                      <textarea name="description" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none resize-y min-h-[80px]" defaultValue={editingProject?.description || ''} placeholder="Brief summary of this project..." />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Category</label>
-                        <input name="category" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none" defaultValue={editingProject?.category || ''} placeholder="e.g. App Dev" />
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Category</label>
+                        <input name="category" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none" defaultValue={editingProject?.category || ''} placeholder="e.g. App Dev" />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Status</label>
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Status</label>
                         <div className="relative">
-                          <select name="status" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none appearance-none cursor-pointer" defaultValue={editingProject?.status || 'Idea'}>
-                            {PROJECT_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+                          <select name="status" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none appearance-none cursor-pointer" defaultValue={editingProject?.status || 'Idea'}>
+                            {PROJECT_STATUSES.map(s => <option key={s} value={s} className="bg-[#0f0f11]">{s}</option>)}
                           </select>
-                          <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none" />
+                          <ChevronDown size={16} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
                         </div>
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Start Date</label>
-                        <input name="startDate" type="date" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none" defaultValue={editingProject?.startDate?.split('T')[0] || ''} />
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Start Date</label>
+                        <input name="startDate" type="date" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none [color-scheme:dark]" defaultValue={editingProject?.startDate?.split('T')[0] || ''} />
                       </div>
                       <div>
-                        <label className="block text-xs font-bold text-muted-foreground uppercase tracking-wider mb-2">Target End Date</label>
-                        <input name="endDate" type="date" className="w-full px-4 py-3 bg-background border border-border/60 focus:border-primary focus:ring-1 focus:ring-primary rounded-xl text-sm transition-all outline-none" defaultValue={editingProject?.endDate?.split('T')[0] || ''} />
+                        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Target End Date</label>
+                        <input name="endDate" type="date" className="w-full px-4 py-3 bg-white/[0.03] border border-white/[0.06] focus:border-violet-500/50 focus:bg-white/[0.05] rounded-xl text-sm text-white transition-all outline-none [color-scheme:dark]" defaultValue={editingProject?.endDate?.split('T')[0] || ''} />
                       </div>
                     </div>
                   </div>
-                  <div className="p-5 border-t border-border/50 bg-muted/10 flex justify-end gap-3">
-                    <button type="button" className="px-5 py-2.5 rounded-xl font-bold text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors" onClick={() => { setShowModal(false); setEditingProject(null); }}>Cancel</button>
-                    <button type="submit" className="px-5 py-2.5 bg-primary text-primary-foreground rounded-xl font-bold text-sm shadow-sm hover:shadow-md hover:bg-primary/90 transition-all disabled:opacity-50" disabled={loading}>
+                  <div className="p-5 border-t border-white/[0.06] bg-white/[0.02] flex justify-end gap-3">
+                    <button type="button" className="px-5 py-2.5 rounded-xl font-bold text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors" onClick={() => { setShowModal(false); setEditingProject(null); }}>Cancel</button>
+                    <button type="submit" className="px-5 py-2.5 bg-violet-500 text-white rounded-xl font-bold text-sm shadow-[0_4px_20px_rgba(139,92,246,0.3)] hover:bg-violet-600 transition-all disabled:opacity-50 active:scale-95" disabled={loading}>
                       {loading ? 'Saving...' : editingProject ? 'Save Changes' : 'Create Project'}
                     </button>
                   </div>
