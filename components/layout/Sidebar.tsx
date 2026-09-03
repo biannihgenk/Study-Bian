@@ -17,6 +17,8 @@ import {
   X,
   Bell,
   ChevronDown,
+  PanelLeftClose,
+  PanelLeftOpen
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -34,13 +36,38 @@ const navItems = [
 export default function Sidebar({ userName, userEmail, unreadNotifications }: SidebarProps) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [desktopOpen, setDesktopOpen] = useState(true);
   const [isDark, setIsDark] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
 
   useEffect(() => {
     setIsDark(document.documentElement.classList.contains('dark'));
+    
+    // Check if user previously closed sidebar
+    const storedState = localStorage.getItem('bian-os-sidebar');
+    if (storedState === 'closed') {
+      setDesktopOpen(false);
+    }
   }, []);
+
+  // Sync main content margin when desktop sidebar toggles
+  useEffect(() => {
+    const mainContent = document.querySelector('.main-content') as HTMLElement;
+    if (mainContent) {
+      if (desktopOpen) {
+        mainContent.classList.remove('sidebar-closed');
+      } else {
+        mainContent.classList.add('sidebar-closed');
+      }
+    }
+  }, [desktopOpen]);
+
+  function toggleDesktopSidebar() {
+    const newState = !desktopOpen;
+    setDesktopOpen(newState);
+    localStorage.setItem('bian-os-sidebar', newState ? 'open' : 'closed');
+  }
 
   function toggleTheme() {
     const newDark = !isDark;
@@ -83,6 +110,17 @@ export default function Sidebar({ userName, userEmail, unreadNotifications }: Si
         </div>
       </header>
 
+      {/* Floating Toggle Button for Desktop (when closed) */}
+      {!desktopOpen && (
+        <button 
+          onClick={toggleDesktopSidebar}
+          className="hidden md:flex fixed top-6 left-6 z-40 p-2.5 bg-card/80 backdrop-blur-xl border border-border/60 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted shadow-sm hover:shadow-md transition-all group"
+          aria-label="Open sidebar"
+        >
+          <PanelLeftOpen size={20} className="group-hover:scale-110 transition-transform" />
+        </button>
+      )}
+
       {/* Mobile Overlay */}
       <AnimatePresence>
         {mobileOpen && (
@@ -99,6 +137,7 @@ export default function Sidebar({ userName, userEmail, unreadNotifications }: Si
         fixed top-0 bottom-0 left-0 w-[260px] bg-card/60 backdrop-blur-2xl border-r border-border/60 
         flex flex-col z-50 transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] shadow-2xl md:shadow-none
         ${mobileOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+        ${!desktopOpen && !mobileOpen ? 'md:-translate-x-full' : ''}
       `}>
         {/* Logo */}
         <div className="p-6 flex items-center justify-between">
@@ -110,8 +149,19 @@ export default function Sidebar({ userName, userEmail, unreadNotifications }: Si
               BIAN OS
             </span>
           </Link>
+          
+          {/* Mobile Close Button */}
           <button className="md:hidden p-2 text-muted-foreground hover:text-foreground bg-muted/50 rounded-full" onClick={() => setMobileOpen(false)} aria-label="Close menu">
             <X size={16} />
+          </button>
+
+          {/* Desktop Close Button */}
+          <button 
+            className="hidden md:flex p-1.5 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors" 
+            onClick={toggleDesktopSidebar} 
+            aria-label="Close sidebar"
+          >
+            <PanelLeftClose size={18} />
           </button>
         </div>
 

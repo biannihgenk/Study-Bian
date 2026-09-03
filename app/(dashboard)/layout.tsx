@@ -20,7 +20,7 @@ export default async function DashboardLayout({
         userEmail={user.email}
         unreadNotifications={unreadNotifications}
       />
-      <main className="main-content min-h-screen md:ml-[240px]">
+      <main className="main-content min-h-screen md:ml-[260px] transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]">
         {children}
       </main>
 
@@ -30,6 +30,9 @@ export default async function DashboardLayout({
             margin-left: 0 !important;
             padding-top: 64px;
           }
+        }
+        .main-content.sidebar-closed {
+          margin-left: 0 !important;
         }
       `}</style>
     </div>
