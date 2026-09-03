@@ -29,7 +29,7 @@ export default function NotificationsClient({ initialNotifications }: { initialN
   async function handleMarkAllRead() { await markAllNotificationsRead(); }
 
   const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.05 } } };
-  const itemVariants = { hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0, transition: { type: 'spring', stiffness: 400, damping: 30 } } };
+  const itemVariants = { hidden: { opacity: 0, x: -20 }, show: { opacity: 1, x: 0, transition: { type: 'spring' as const, stiffness: 400, damping: 30 } } };
 
   return (
     <div className="max-w-3xl mx-auto pb-10">

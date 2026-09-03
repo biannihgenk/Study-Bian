@@ -26,7 +26,7 @@ export default function LearningClient({ initialSubjects, recentSessions }: { in
   async function handleLogSession(formData: FormData) { setLoading(true); await createSession(formData); setShowSessionModal(false); setLoading(false); }
 
   const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } } };
+  const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 300, damping: 24 } } };
 
   return (
     <div className="max-w-7xl mx-auto pb-10">

@@ -32,7 +32,7 @@ export default function ProjectsClient({ initialProjects }: { initialProjects: P
   async function handleDeleteTask(taskId: number) { await deleteProjectTask(taskId); }
 
   const containerVariants = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.1 } } };
-  const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 300, damping: 24 } } };
+  const itemVariants = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 300, damping: 24 } } };
 
   return (
     <div className="max-w-7xl mx-auto pb-10">

@@ -95,12 +95,12 @@ export default function TasksClient({ initialTasks, goals, competitions, project
 
   const itemVariants = {
     hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 400, damping: 30 } }
+    show: { opacity: 1, y: 0, transition: { type: 'spring' as const, stiffness: 400, damping: 30 } }
   };
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
-    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 25 } },
+    visible: { opacity: 1, scale: 1, y: 0, transition: { type: "spring" as const, stiffness: 300, damping: 25 } },
     exit: { opacity: 0, scale: 0.95, y: 20, transition: { duration: 0.2 } }
   };
 
@@ -210,9 +210,9 @@ export default function TasksClient({ initialTasks, goals, competitions, project
                       {(task.goalId || task.projectId || task.competitionId) && (
                         <span className="text-xs text-muted-foreground px-2 opacity-50 hidden sm:inline-block">|</span>
                       )}
-                      {task.goalId && <Target size={12} className="text-amber-500 opacity-70" title="Linked to Goal" />}
-                      {task.projectId && <FolderKanban size={12} className="text-blue-500 opacity-70" title="Linked to Project" />}
-                      {task.competitionId && <Trophy size={12} className="text-rose-500 opacity-70" title="Linked to Competition" />}
+                      {task.goalId && <Target size={12} className="text-amber-500 opacity-70" aria-label="Linked to Goal" />}
+                      {task.projectId && <FolderKanban size={12} className="text-blue-500 opacity-70" aria-label="Linked to Project" />}
+                      {task.competitionId && <Trophy size={12} className="text-rose-500 opacity-70" aria-label="Linked to Competition" />}
                     </div>
                   </div>
 
